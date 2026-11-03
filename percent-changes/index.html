@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Discount That Lies · Percentage changes</title>
+    <meta name="description" content="A shop raises ₹100 by 20% then gives 20% off. Do you get ₹100 back? Experiment with prices and percentages to find out why it's ₹96." />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23c8322a'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-size='40' font-family='Georgia' fill='white'%3E%25%3C/text%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Kalam:wght@400;700&display=swap" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <script>
+      try { document.documentElement.dataset.theme = JSON.parse(localStorage.getItem("lab:theme")) || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch { document.documentElement.dataset.theme = "light"; }
+    </script>
+    <style>
+      .tag {
+        display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 6px 22px; margin: 4px 0 10px;
+        background: var(--marker); color: #1c2230; font: 800 1.6rem var(--font-display);
+        clip-path: polygon(14px 0, 100% 0, 100% 100%, 14px 100%, 0 50%); transition: transform 0.3s;
+      }
+      .tag.bump { animation: pop 0.45s cubic-bezier(0.3, 1.6, 0.5, 1); }
+      .pricebar { position: relative; display: flex; height: 54px; margin: 10px 0 30px; }
+      .block {
+        flex: none; height: 100%; display: grid; place-items: center; overflow: hidden; white-space: nowrap;
+        background: #2f63c4; color: #fff; font-weight: 700; font-size: 0.85rem;
+        border-right: 2px solid var(--sheet); transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s, opacity 0.6s, background 0.3s;
+      }
+      .block:first-child { border-radius: 8px 0 0 8px; }
+      .block.add { background: var(--green); }
+      .block.cut { background: var(--red); transform: translateY(26px) rotate(4deg); opacity: 0.85; }
+      .ghost-line { position: absolute; top: -8px; bottom: -8px; border-left: 3px dashed var(--ink); transition: left 0.6s; }
+      .ghost-line::after { content: attr(data-label); position: absolute; top: -18px; left: 4px; font: 700 0.8rem var(--font-body); white-space: nowrap; }
+      .caption { min-height: 3em; font-size: 1.05rem; }
+      .chain { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; font-weight: 700; font-size: 1.05rem; margin: 6px 0; }
+      .chain .arrow { color: var(--ink-soft); font-size: 0.85rem; font-weight: 400; }
+      .chain .up { color: var(--green); }
+      .chain .down { color: var(--red); }
+      .rows { display: grid; gap: 10px; margin: 10px 0; position: relative; }
+      .row { display: grid; grid-template-columns: 70px 1fr; align-items: center; gap: 6px; }
+      .row > span { font-size: 0.8rem; font-weight: 700; color: var(--ink-soft); }
+      .row .bar { display: flex; height: 34px; position: relative; }
+      .row .bar > div { height: 100%; transition: width 0.4s; display: flex; align-items: center; padding-left: 6px; color: #fff; font-size: 0.8rem; font-weight: 700; white-space: nowrap; overflow: hidden; }
+      .row .base { background: #2f63c4; border-radius: 6px 0 0 6px; }
+      .row .plus { background: var(--green); }
+      .row .minus { background: repeating-linear-gradient(135deg, var(--red) 0 6px, transparent 6px 12px); border: 2px solid var(--red); }
+      .rows .start-line { position: absolute; top: -4px; bottom: -4px; border-left: 2px dashed var(--ink); left: calc(76px + (100% - 76px) * var(--x)); transition: left 0.4s; }
+      .controls { display: grid; gap: 10px; }
+      .controls label { display: grid; grid-template-columns: 1fr auto; gap: 0 10px; font-weight: 700; }
+      .controls label input { grid-column: 1 / -1; }
+      .controls output { font: 800 1.15rem var(--font-display); color: var(--pen); }
+      .verdict { font: 800 1.3rem var(--font-display); margin: 8px 0; }
+      .seg { display: inline-flex; border: 2px solid var(--ink); border-radius: 12px; overflow: hidden; }
+      .seg button { border: 0; background: var(--sheet); color: var(--ink); font: 700 0.9rem var(--font-body); padding: 8px 12px; min-height: 44px; cursor: pointer; }
+      .seg button[aria-pressed="true"] { background: var(--ink); color: var(--sheet); }
+    </style>
+  </head>
+  <body>
+    <header class="lab-header">
+      <a class="brand" href="../"><span class="brand-mark" aria-hidden="true">✓</span> The Mistake Lab</a>
+      <button class="icon-btn" type="button" data-theme-toggle></button>
+    </header>
+
+    <main class="wrap">
+      <p class="muted" style="margin:0 0 2px">Class 7–8 · Percentages</p>
+      <h1>The discount that lies</h1>
+      <ol class="stepper"></ol>
+
+      <!-- 1. PREDICT -->
+      <section data-step data-title="Predict" data-icon="bi-lightbulb">
+        <div class="sheet reveal">
+          <span class="step-label" style="--i:0">Step 1 · Predict</span>
+          <div class="speech claim" style="--i:1"><span data-character="shopkeeper"></span><div class="bubble" data-say="intro"></div></div>
+          <form id="predict-form" style="--i:2">
+            <fieldset class="choices">
+              <legend>The bag was ₹100. Price went <strong>up 20%</strong>, then <strong>down 20%</strong>. What do you pay now?</legend>
+              <label><input type="radio" name="claim" value="same" required /> Exactly ₹100. The 20%s cancel out.</label>
+              <label><input type="radio" name="claim" value="more" /> More than ₹100</label>
+              <label><input type="radio" name="claim" value="less" /> Less than ₹100</label>
+            </fieldset>
+            <fieldset class="choices row confidence">
+              <legend>How sure are you?</legend>
+              <label><input type="radio" name="confidence" value="Guessing" required /> Guessing</label>
+              <label><input type="radio" name="confidence" value="Fairly sure" /> Fairly sure</label>
+              <label><input type="radio" name="confidence" value="Certain" /> Certain</label>
+            </fieldset>
+            <button class="btn primary" type="submit"><i class="bi bi-lock" aria-hidden="true"></i> Lock in my prediction</button>
+            <div class="feedback"></div>
+          </form>
+          <div class="next-row"><button class="btn primary" type="button" data-next>Go to the shop <i class="bi bi-arrow-right" aria-hidden="true"></i></button></div>
+        </div>
+      </section>
+
+      <!-- 2. EXPERIMENT -->
+      <section data-step data-title="Experiment" data-icon="bi-sliders">
+        <div class="sheet reveal">
+          <span class="step-label" style="--i:0">Step 2 · Experiment</span>
+          <h2 style="--i:1">Watch the price tag</h2>
+          <p style="--i:2">The blue bar is the price. Each block is an equal part. Tap the buttons in order.</p>
+          <div style="--i:3">
+            <div class="tag" id="tag" aria-live="polite">₹100</div>
+            <div class="pricebar" id="pricebar" aria-hidden="true"></div>
+            <p class="caption" id="caption" aria-live="polite">₹100 split into 5 equal parts. Each part is ₹20 — that's 20%.</p>
+            <div class="btn-row">
+              <button class="btn primary" type="button" id="btn-up"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i> Raise price 20%</button>
+              <button class="btn primary" type="button" id="btn-down" disabled><i class="bi bi-tag" aria-hidden="true"></i> Give 20% off</button>
+            </div>
+          </div>
+          <form id="why-form" hidden style="margin-top:16px">
+            <fieldset class="choices">
+              <legend>The increase added ₹20. The discount removed ₹24. Why more?</legend>
+              <label><input type="radio" name="why" value="cheat" /> Dinesh secretly used a bigger percentage.</label>
+              <label><input type="radio" name="why" value="base" /> 20% of a bigger price is a bigger amount.</label>
+              <label><input type="radio" name="why" value="round" /> Shops always round discounts up.</label>
+            </fieldset>
+            <button class="btn primary" type="submit">Check</button>
+            <div class="feedback"></div>
+          </form>
+
+          <div id="lab" hidden>
+            <h2 style="margin-top:22px">Price lab</h2>
+            <p>Is ₹96 a fluke? Change anything. Complete the missions.</p>
+            <div class="controls">
+              <label>Starting price <output id="o-price">₹100</output><input type="range" id="price" min="50" max="1000" step="50" value="100" /></label>
+              <label>Increase <output id="o-up">20%</output><input type="range" id="up" min="0" max="100" step="5" value="20" /></label>
+              <label>Discount <output id="o-down">20%</output><input type="range" id="down" min="0" max="100" step="5" value="20" /></label>
+              <div class="seg" role="group" aria-label="Order of changes">
+                <button type="button" data-order="up" aria-pressed="true">Increase first</button>
+                <button type="button" data-order="down" aria-pressed="false">Discount first</button>
+              </div>
+            </div>
+            <div class="chain" id="chain" aria-live="polite"></div>
+            <div class="rows" id="rows" aria-hidden="true"></div>
+            <p class="verdict" id="verdict"></p>
+            <ul class="missions" id="missions">
+              <li data-m="start"><i class="bi bi-circle" aria-hidden="true"></i><span>Keep +20% and −20% but change the <strong>starting price</strong>. Still a loss?<span class="found"></span></span></li>
+              <li data-m="order"><i class="bi bi-circle" aria-hidden="true"></i><span>Do the <strong>discount first</strong>. Does that help Dinesh's customers?<span class="found"></span></span></li>
+              <li data-m="big"><i class="bi bi-circle" aria-hidden="true"></i><span>Try <strong>+50% then −50%</strong>.<span class="found"></span></span></li>
+              <li data-m="undo"><i class="bi bi-circle" aria-hidden="true"></i><span>Keep the 20% discount. Find the <strong>increase</strong> that it exactly cancels.<span class="found"></span></span></li>
+            </ul>
+          </div>
+          <div class="next-row"><button class="btn primary" type="button" data-next>What's the pattern? <i class="bi bi-arrow-right" aria-hidden="true"></i></button></div>
+        </div>
+      </section>
+
+      <!-- 3. OBSERVE -->
+      <section data-step data-title="Observe" data-icon="bi-eye">
+        <div class="sheet reveal">
+          <span class="step-label" style="--i:0">Step 3 · Observe</span>
+          <div class="speech" style="--i:1"><span data-character="shopkeeper"></span><div class="bubble" data-say="observe"></div></div>
+          <p style="--i:2">Answer from what you saw. No slider for these — use the pattern.</p>
+          <div class="quiz" id="observe-quiz" style="--i:3"></div>
+          <div class="next-row"><button class="btn primary" type="button" data-next>Explain it <i class="bi bi-arrow-right" aria-hidden="true"></i></button></div>
+        </div>
+      </section>
+
+      <!-- 4. EXPLAIN -->
+      <section data-step data-title="Explain" data-icon="bi-chat-square-text">
+        <div class="sheet reveal">
+          <span class="step-label" style="--i:0">Step 4 · Explain</span>
+          <h2 style="--i:1">True or false?</h2>
+          <p style="--i:2">Dinesh's nephew wrote these notes. Mark each one.</p>
+          <div id="claims" style="--i:3"></div>
+          <label style="--i:4;display:block;margin-top:16px"><strong>In your own words</strong> (optional, your teacher will see this):<br />
+            <span class="muted">Explain to Dinesh why the price didn't go back to ₹100.</span>
+            <textarea id="note" maxlength="400" spellcheck="true" placeholder="Dinesh ji, the 20% discount was bigger because..."></textarea>
+          </label>
+          <div class="next-row"><button class="btn primary" type="button" data-next>Final challenge <i class="bi bi-arrow-right" aria-hidden="true"></i></button></div>
+        </div>
+      </section>
+
+      <!-- 5. TRANSFER -->
+      <section data-step data-title="Transfer" data-icon="bi-trophy">
+        <div class="sheet reveal">
+          <span class="step-label" style="--i:0">Step 5 · Transfer</span>
+          <div class="speech" style="--i:1"><span data-character="shopkeeper"></span><div class="bubble" data-say="transfer"></div></div>
+          <p class="muted" style="--i:2">New numbers every time. Your <strong>first try</strong> counts. A rough calculation on paper is fine.</p>
+          <div class="quiz" id="transfer-quiz" style="--i:3"></div>
+          <div id="transfer-result"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <button class="btn small ghost" type="button" data-restart><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Start over</button>
+    </footer>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Style Guide · The Mistake Lab</title>
+    <meta name="description" content="Living style guide and component gallery for The Mistake Lab maths experiments." />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23c8322a'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-size='40' font-family='Georgia' fill='white'%3E%E2%9C%93%3C/text%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Kalam:wght@400;700&display=swap" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <script>
+      try { document.documentElement.dataset.theme = JSON.parse(localStorage.getItem("lab:theme")) || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch { document.documentElement.dataset.theme = "light"; }
+    </script>
+    <style>
+      .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+      .swatch { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; font-size: 0.85rem; background: var(--sheet); }
+      .swatch div { height: 44px; }
+      .swatch code { display: block; padding: 4px 8px; }
+      .chars { display: flex; flex-wrap: wrap; gap: 18px; }
+      .chars figure { margin: 0; text-align: center; font-weight: 700; }
+      .chars .character { width: 80px; height: 80px; display: block; }
+      code { font-size: 0.9em; }
+    </style>
+  </head>
+  <body>
+    <header class="lab-header">
+      <a class="brand" href="../"><span class="brand-mark" aria-hidden="true">✓</span> The Mistake Lab</a>
+      <button class="icon-btn" type="button" data-theme-toggle></button>
+    </header>
+
+    <main class="wrap">
+      <h1>Style guide</h1>
+      <p class="lede">Live components from <code>assets/site.css</code> and <code>assets/lib.js</code>. Rationale, voice and the five-step learning design are in <code>STYLE.md</code>. Toggle the theme (top right) to check both surfaces: <strong>notebook</strong> (light) and <strong>blackboard</strong> (dark).</p>
+
+      <section class="sheet">
+        <span class="step-label">Colour</span>
+        <h2>Tokens</h2>
+        <div class="swatches" id="swatches"></div>
+        <p class="muted" style="margin-top:10px">Model colours: blue = student / true quantity · red = character's claim · green = added / correct · amber = unknown (x).</p>
+      </section>
+
+      <section class="sheet">
+        <span class="step-label">Type</span>
+        <h2>Bricolage Grotesque for headings</h2>
+        <p>Atkinson Hyperlegible for body and all maths: 1 l I 0 O · 3x − 4 = 2x + 5 · ₹96 · <span class="frac"><b>5</b><b>6</b></span></p>
+        <p class="hand" style="font-size:1.3rem">Kalam for characters and red-pen marks only.</p>
+        <p>Highlight <span class="hl">the one key phrase</span> per screen.</p>
+      </section>
+
+      <section class="sheet">
+        <span class="step-label">Characters</span>
+        <h2>The overconfident cast</h2>
+        <div class="chars">
+          <figure><span data-character="robot"></span>Turbo<br /><span class="muted">fractions</span></figure>
+          <figure><span data-character="shopkeeper"></span>Dinesh<br /><span class="muted">percentages</span></figure>
+          <figure><span data-character="monkey"></span>Gappu<br /><span class="muted">equations</span></figure>
+        </div>
+        <div class="speech claim" style="margin-top:16px"><span data-character="robot"></span><div class="bubble" id="demo-bubble"></div></div>
+        <button class="btn small" type="button" id="replay"><i class="bi bi-play" aria-hidden="true"></i> Replay <code>say()</code></button>
+      </section>
+
+      <section class="sheet">
+        <span class="step-label">Controls</span>
+        <h2>Stepper, choices, buttons</h2>
+        <ol class="stepper" aria-label="Demo progress">
+          <li><button type="button" class="done"><i class="bi bi-lightbulb" aria-hidden="true"></i>Predict</button></li>
+          <li><button type="button" aria-current="step"><i class="bi bi-rulers" aria-hidden="true"></i>Experiment</button></li>
+          <li><button type="button" disabled><i class="bi bi-eye" aria-hidden="true"></i>Observe</button></li>
+          <li><button type="button" disabled><i class="bi bi-chat-square-text" aria-hidden="true"></i>Explain</button></li>
+          <li><button type="button" disabled><i class="bi bi-trophy" aria-hidden="true"></i>Transfer</button></li>
+        </ol>
+        <fieldset class="choices">
+          <legend>Choices (always include the tempting wrong option)</legend>
+          <label><input type="radio" name="demo" /> Yes, <span class="frac"><b>2</b><b>5</b></span> is right</label>
+          <label><input type="radio" name="demo" checked /> No, it's more than <span class="frac"><b>2</b><b>5</b></span></label>
+        </fieldset>
+        <fieldset class="choices row confidence">
+          <legend>Confidence</legend>
+          <label><input type="radio" name="conf" /> Guessing</label>
+          <label><input type="radio" name="conf" /> Fairly sure</label>
+          <label><input type="radio" name="conf" /> Certain</label>
+        </fieldset>
+        <div class="btn-row">
+          <button class="btn primary" type="button">Primary</button>
+          <button class="btn" type="button">Default</button>
+          <button class="btn ghost" type="button">Ghost</button>
+          <button class="btn small" type="button">Small</button>
+          <button class="btn" type="button" disabled>Disabled</button>
+        </div>
+      </section>
+
+      <section class="sheet">
+        <span class="step-label">Feedback</span>
+        <h2>What happened → why → what to try</h2>
+        <div class="feedback ok">Yes! <span class="frac"><b>3</b><b>6</b></span> + <span class="frac"><b>2</b><b>6</b></span> = <span class="frac"><b>5</b><b>6</b></span>. Same-size pieces can be counted together.</div>
+        <div class="feedback bad">That's Turbo's trick — adding tops and bottoms. Is your answer even bigger than <span class="frac"><b>1</b><b>2</b></span>?</div>
+        <div class="feedback hint">Enter your answer first.</div>
+        <div class="callout">Callout: for a key takeaway or score.</div>
+      </section>
+
+      <section class="sheet">
+        <span class="step-label">Assessment</span>
+        <h2><code>claimChecker()</code> and <code>quiz()</code></h2>
+        <div id="demo-claims"></div>
+        <div class="quiz" id="demo-quiz" style="margin-top:16px"></div>
+        <ul class="missions">
+          <li class="done"><i class="bi bi-circle" aria-hidden="true"></i><span>Missions tick themselves.<span class="found">Found: sixths fit!</span></span></li>
+          <li><i class="bi bi-circle" aria-hidden="true"></i><span>Unfinished mission.</span></li>
+        </ul>
+      </section>
+
+      <section class="sheet">
+        <span class="step-label">Report</span>
+        <h2><code>reportCard()</code></h2>
+        <div id="demo-report"></div>
+      </section>
+    </main>
+
+    <script type="module">
+      import { $, $$, character, claimChecker, frac, initTheme, quiz, reportCard, say } from "../assets/lib.js";
+      initTheme();
+      $$("[data-character]").forEach((el) => (el.outerHTML = character(el.dataset.character)));
+      const tokens = ["paper", "sheet", "inset", "ink", "ink-soft", "pen", "red", "green", "marker", "amber-fill", "line"];
+      const paintSwatches = () =>
+        ($("#swatches").innerHTML = tokens
+          .map((t) => `<div class="swatch"><div style="background:var(--${t})"></div><code>--${t}</code><code class="muted">${getComputedStyle(document.documentElement).getPropertyValue(`--${t}`).trim()}</code></div>`)
+          .join(""));
+      paintSwatches();
+      $("[data-theme-toggle]").addEventListener("click", () => setTimeout(paintSwatches));
+      const line = `Fractions are easy! <span class="say-math">½ + ⅓ = ⅖</span>`;
+      say($("#demo-bubble"), line);
+      $("#replay").addEventListener("click", () => say($("#demo-bubble"), line));
+      claimChecker($("#demo-claims"), [{ text: "Adding the bottoms is fine when both tops are 1.", answer: false, why: `${frac(1, 2)} + ${frac(1, 2)} would be ${frac(2, 4)} — but half + half is a whole!` }], () => {});
+      quiz(
+        $("#demo-quiz"),
+        [{ html: ` ${frac(1, 3)} + ${frac(1, 4)} = ?`, type: "fraction", check: ([n, d]) => (n * 12 === 7 * d ? { ok: true } : { ok: false, msg: "Try twelfths." }), show: frac(7, 12) }],
+        () => {},
+      );
+      reportCard($("#demo-report"), { slug: "style-guide-demo", title: "Demo report", rows: [["My prediction", "Turbo is right (Certain)"], ["Transfer (first set)", "4/5 first try"]], note: "Pieces must be the same size." });
+    </script>
+  </body>
+</html>

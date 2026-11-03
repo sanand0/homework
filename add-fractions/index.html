@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Catch the Confident Mistake · Adding fractions</title>
+    <meta name="description" content="Turbo the robot says 1/2 + 1/3 = 2/5. Use fraction strips to prove it wrong and find out why denominators can't just be added." />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23c8322a'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-size='40' font-family='Georgia' fill='white'%3E%E2%9C%93%3C/text%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Kalam:wght@400;700&display=swap" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="../assets/site.css" />
+    <script>
+      try { document.documentElement.dataset.theme = JSON.parse(localStorage.getItem("lab:theme")) || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch { document.documentElement.dataset.theme = "light"; }
+    </script>
+    <style>
+      .strips { position: relative; display: grid; gap: 8px; margin: 14px 0; --label: 58px; }
+      .strip-row { display: grid; grid-template-columns: var(--label) 1fr; align-items: center; gap: 6px; }
+      .strip-row > span { font-size: 0.8rem; font-weight: 700; color: var(--ink-soft); line-height: 1.1; }
+      .track { position: relative; height: 46px; border: 2px dashed var(--line); border-radius: 8px; overflow: hidden; }
+      .track.whole { background: var(--inset); border-style: solid; display: grid; place-items: center; font-weight: 700; color: var(--ink-soft); height: 34px; }
+      .piece {
+        position: absolute; top: 0; bottom: 0; left: calc(var(--l) * 100%); width: calc(var(--w) * 100%);
+        display: grid; place-items: center; border: 2px solid var(--sheet); border-radius: 7px;
+        color: #fff; font-size: 0.85rem; transition: left 0.5s, width 0.5s, opacity 0.4s;
+        animation: slide-in 0.5s both cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      @keyframes slide-in { from { transform: translateX(-30px); opacity: 0; } }
+      .piece.half { background: #2f63c4; }
+      .piece.third { background: #1d8a52; }
+      .piece.turbo { background: repeating-linear-gradient(135deg, #c8322a 0 10px, #d9534b 10px 20px); }
+      .piece.measure { background: var(--amber-fill); color: #1c2230; border-color: var(--sheet); }
+      .marker {
+        position: absolute; top: -4px; bottom: -4px; width: 0; border-left: 3px dashed var(--red);
+        left: calc(var(--label) + 6px + (100% - var(--label) - 6px) * var(--x)); transition: left 0.5s, opacity 0.4s; pointer-events: none;
+      }
+      .strips.sticky { position: sticky; top: 0; z-index: 2; background: var(--sheet); padding: 8px 0; margin: 6px 0; box-shadow: 0 8px 10px -8px rgb(0 0 0 / 0.25); }
+      .tray { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0; }
+      .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+      .chips .btn[aria-pressed="true"] { background: var(--amber-fill); color: #1c2230; border-color: var(--ink); }
+      .counter { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 8px 0; }
+      .counter output { font: 800 1.5rem var(--font-display); min-width: 3.2em; text-align: center; }
+      .status { min-height: 1.6em; font-weight: 700; }
+      .status.exact { color: var(--green); }
+      .status.short, .status.over { color: var(--red); }
+      .frac-big { font-size: 1.5rem; }
+    </style>
+  </head>
+  <body>
+    <header class="lab-header">
+      <a class="brand" href="../"><span class="brand-mark" aria-hidden="true">✓</span> The Mistake Lab</a>
+      <button class="icon-btn" type="button" data-theme-toggle></button>
+    </header>
+
+    <main class="wrap">
+      <p class="muted" style="margin:0 0 2px">Class 6–7 · Adding fractions</p>
+      <h1>Catch the confident mistake</h1>
+      <ol class="stepper"></ol>
+
+      <!-- 1. PREDICT -->
+      <section data-step data-title="Predict" data-icon="bi-lightbulb">
+        <div class="sheet reveal">
+          <span class="step-label" style="--i:0">Step 1 · Predict</span>
+          <div class="speech claim" style="--i:1"><span data-character="robot"></span><div class="bubble" data-say="intro"></div></div>
+          <form id="predict-form" style="--i:2">
+            <fieldset class="choices">
+              <legend>Is Turbo right?</legend>
+              <label><input type="radio" name="claim" value="yes" required /> Yes. 1 + 1 = 2 on top, 2 + 3 = 5 below.</label>
+              <label><input type="radio" name="claim" value="more" /> No. The real answer is more than <span class="frac"><b>2</b><b>5</b></span></label>
+              <label><input type="radio" name="claim" value="less" /> No. The real answer is less than <span class="frac"><b>2</b><b>5</b></span></label>
+              <label><input type="radio" name="claim" value="unsure" /> I'm not sure.</label>
+            </fieldset>
+            <fieldset class="choices row confidence">
+              <legend>How sure are you?</legend>
+              <label><input type="radio" name="confidence" value="Guessing" required /> Guessing</label>
+              <label><input type="radio" name="confidence" value="Fairly sure" /> Fairly sure</label>
+              <label><input type="radio" name="confidence" value="Certain" /> Certain</label>
+            </fieldset>
+            <button class="btn primary" type="submit"><i class="bi bi-lock" aria-hidden="true"></i> Lock in my prediction</button>
+            <div class="feedback"></div>
+          </form>
+          <div class="next-row"><button class="btn primary" type="button" data-next>Test Turbo <i class="bi bi-arrow-right" aria-hidden="true"></i></button></div>
+        </div>
+      </section>
+
+      <!-- 2. EXPERIMENT -->
+      <section data-step data-title="Experiment" data-icon="bi-rulers">
+        <div class="sheet reveal">
+          <span class="step-label" style="--i:0">Step 2 · Experiment</span>
+          <h2 style="--i:1">Put the pieces end to end</h2>
+          <p style="--i:2">Each strip below is <strong>1 whole</strong>. Tap the pieces to lay <span class="frac"><b>1</b><b>2</b></span> and <span class="frac"><b>1</b><b>3</b></span> side by side.</p>
+          <div class="tray" style="--i:3">
+            <button class="btn" type="button" data-place="half"><i class="bi bi-plus-lg" aria-hidden="true"></i> <span class="frac"><b>1</b><b>2</b></span> piece</button>
+            <button class="btn" type="button" data-place="third"><i class="bi bi-plus-lg" aria-hidden="true"></i> <span class="frac"><b>1</b><b>3</b></span> piece</button>
+          </div>
+          <div class="strips" id="lab-strips" style="--i:4">
+            <div class="strip-row"><span>1 whole</span><div class="track whole">1</div></div>
+            <div class="strip-row"><span>Your sum</span><div class="track" id="sum-track" aria-live="polite"></div></div>
+            <div class="strip-row" id="turbo-row" hidden><span>Turbo's <span class="frac"><b>2</b><b>5</b></span></span><div class="track" id="turbo-track"></div></div>
+            <div class="strip-row" id="measure-row" hidden><span>Measure</span><div class="track" id="measure-track"></div></div>
+            <div class="marker" id="marker" style="--x:0;opacity:0"></div>
+          </div>
+
+          <form id="compare-form" hidden>
+            <fieldset class="choices">
+              <legend>Look at Turbo's red strip. What do you notice?</legend>
+              <label><input type="radio" name="cmp" value="same" /> It matches the sum exactly.</label>
+              <label><input type="radio" name="cmp" value="shorter" /> It is shorter than the <span class="frac"><b>1</b><b>2</b></span> piece alone!</label>
+              <label><input type="radio" name="cmp" value="longer" /> It is longer than the sum.</label>
+            </fieldset>
+            <button class="btn primary" type="submit">Check</button>
+            <div class="feedback"></div>
+          </form>
+
+          <div id="measure-part" hidden>
+            <h2 style="margin-top:18px">Find the exact answer</h2>
+            <p>Measure the sum with <strong>equal pieces</strong>. Pick a piece size, then add pieces until they reach the red line exactly.</p>
+            <div class="chips" role="group" aria-label="Piece size" id="sizes"></div>
+            <div class="counter">
+              <button class="btn" type="button" id="minus" aria-label="Remove a piece"><i class="bi bi-dash-lg" aria-hidden="true"></i></button>
+              <output id="count" aria-live="polite">0</output>
+              <button class="btn" type="button" id="plus" aria-label="Add a piece"><i class="bi bi-plus-lg" aria-hidden="true"></i></button>
+            </div>
+            <p class="status" id="status" aria-live="polite"></p>
+            <ul class="missions" id="missions">
+              <li data-m="exact"><i class="bi bi-circle" aria-hidden="true"></i><span>Find a piece size that reaches the red line <strong>exactly</strong>.<span class="found"></span></span></li>
+              <li data-m="second"><i class="bi bi-circle" aria-hidden="true"></i><span>Find a <strong>different</strong> piece size that also fits exactly.<span class="found"></span></span></li>
+              <li data-m="fifths"><i class="bi bi-circle" aria-hidden="true"></i><span>Turbo used fifths. Can fifths ever fit exactly? Try 4 and 5 of them.<span class="found"></span></span></li>
+            </ul>
+          </div>
+          <div class="next-row"><button class="btn primary" type="button" data-next>What did we learn? <i class="bi bi-arrow-right" aria-hidden="true"></i></button></div>
+        </div>
+      </section>
+
+      <!-- 3. OBSERVE -->
+      <section data-step data-title="Observe" data-icon="bi-eye">
+        <div class="sheet reveal">
+          <span class="step-label" style="--i:0">Step 3 · Observe</span>
+          <div class="speech" style="--i:1"><span data-character="robot"></span><div class="bubble" data-say="observe"></div></div>
+          <p style="--i:2">Cut Turbo's pieces into same-size pieces and watch what happens:</p>
+          <div class="btn-row" style="--i:3;margin:0 0 6px">
+            <button class="btn small" type="button" data-cut="6">Cut into sixths</button>
+            <button class="btn small" type="button" data-cut="12">Cut into twelfths</button>
+            <button class="btn small ghost" type="button" data-cut="0">Undo cuts</button>
+          </div>
+          <div class="strips" style="--i:4">
+            <div class="strip-row"><span id="cut-label">Sum</span><div class="track" id="cut-track"></div></div>
+          </div>
+          <p class="frac-big" id="cut-equation" aria-live="polite" style="--i:5"></p>
+          <div class="quiz" id="observe-quiz" style="--i:6"></div>
+          <div class="next-row"><button class="btn primary" type="button" data-next>Explain it <i class="bi bi-arrow-right" aria-hidden="true"></i></button></div>
+        </div>
+      </section>
+
+      <!-- 4. EXPLAIN -->
+      <section data-step data-title="Explain" data-icon="bi-chat-square-text">
+        <div class="sheet reveal">
+          <span class="step-label" style="--i:0">Step 4 · Explain</span>
+          <h2 style="--i:1">True or false?</h2>
+          <p style="--i:2">Turbo wrote these notes after your experiment. Some are wrong. Mark each one.</p>
+          <div id="claims" style="--i:3"></div>
+          <label style="--i:4;display:block;margin-top:16px"><strong>In your own words</strong> (optional, your teacher will see this):<br />
+            <span class="muted">Explain to Turbo why <span class="frac"><b>1</b><b>2</b></span> + <span class="frac"><b>1</b><b>3</b></span> is not <span class="frac"><b>2</b><b>5</b></span>.</span>
+            <textarea id="note" maxlength="400" spellcheck="true" placeholder="Turbo, you can't add the bottoms because..."></textarea>
+          </label>
+          <div class="next-row"><button class="btn primary" type="button" data-next>Final challenge <i class="bi bi-arrow-right" aria-hidden="true"></i></button></div>
+        </div>
+      </section>
+
+      <!-- 5. TRANSFER -->
+      <section data-step data-title="Transfer" data-icon="bi-trophy">
+        <div class="sheet reveal">
+          <span class="step-label" style="--i:0">Step 5 · Transfer</span>
+          <div class="speech claim" style="--i:1"><span data-character="robot"></span><div class="bubble" data-say="transfer"></div></div>
+          <p class="muted" style="--i:2">New numbers every time. Your <strong>first try</strong> on each question counts. Hints appear if you miss.</p>
+          <div class="quiz" id="transfer-quiz" style="--i:3"></div>
+          <div id="transfer-result"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <button class="btn small ghost" type="button" data-restart><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Start over</button>
+    </footer>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

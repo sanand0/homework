@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Mistake Lab · Maths experiments for Classes 6–8</title>
+    <meta name="description" content="Ten-minute maths homework experiments for CBSE Classes 6–8. A confident character makes a classic mistake; students predict, experiment and catch it." />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23c8322a'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-size='40' font-family='Georgia' fill='white'%3E%E2%9C%93%3C/text%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Kalam:wght@400;700&display=swap" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="assets/site.css" />
+    <script>
+      try { document.documentElement.dataset.theme = JSON.parse(localStorage.getItem("lab:theme")) || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); } catch { document.documentElement.dataset.theme = "light"; }
+    </script>
+    <style>
+      .hero { padding: 8px 0 18px; }
+      .hero h1 { font-size: clamp(2.4rem, 10vw, 3.6rem); margin: 10px 0 14px; }
+      .hero h1 .frac > b:first-child { border-bottom-width: 0.07em; }
+      .hero .fix .frac { font-family: var(--font-hand); }
+      .hero h1 .strike { position: relative; color: var(--red); white-space: nowrap; }
+      .hero h1 .strike::after {
+        content: ""; position: absolute; left: -4%; right: -4%; top: 52%; height: 0.12em; background: var(--red);
+        transform: rotate(-4deg) scaleX(0); transform-origin: left; animation: strike 0.6s 0.6s forwards;
+      }
+      @keyframes strike { to { transform: rotate(-4deg) scaleX(1); } }
+      .hero .fix { font-family: var(--font-hand); color: var(--green); font-size: 0.85em; display: inline-block; transform: rotate(-3deg); animation: rise 0.5s 1.1s both; }
+      .lede { font-size: 1.15rem; max-width: 38em; }
+      .flow { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 14px 0 0; }
+      .flow li { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: var(--sheet); border: 1px solid var(--line); font-weight: 700; font-size: 0.9rem; }
+      .flow li .bi { color: var(--pen); }
+      .experiments { list-style: none; padding: 0; margin: 10px 0 24px; display: grid; gap: 16px; }
+      .card { display: grid; grid-template-columns: 72px 1fr; gap: 6px 14px; align-items: start; text-decoration: none; color: inherit; }
+      .card .character { width: 72px; height: 72px; grid-row: span 2; }
+      .card h2 { font-size: 1.45rem; margin: 0 0 2px; }
+      .card .claim { font: 700 1.3rem var(--font-hand); color: var(--red); margin: 2px 0 6px; }
+      .card .claim s { text-decoration-thickness: 2px; }
+      .card .meta { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 8px; }
+      .card .body { grid-column: 2; }
+      @media (max-width: 420px) { .card { grid-template-columns: 56px 1fr; } .card .character { width: 56px; height: 56px; } .card .body { grid-column: 1 / -1; } }
+      .done-badge { display: none; font: 700 1rem var(--font-hand); color: var(--green); }
+      .done .done-badge { display: inline; }
+      .sheet:has(.card:hover) { border-color: var(--pen); }
+      details { border-top: 2px dashed var(--line); padding: 10px 0; }
+      details:last-of-type { border-bottom: 2px dashed var(--line); }
+      summary { cursor: pointer; font: 700 1.1rem var(--font-display); min-height: 44px; display: flex; align-items: center; gap: 8px; }
+      details ul, details ol { padding-left: 1.2em; }
+      details li { margin-bottom: 6px; }
+    </style>
+  </head>
+  <body>
+    <header class="lab-header">
+      <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">✓</span> The Mistake Lab</a>
+      <button class="icon-btn" type="button" data-theme-toggle></button>
+    </header>
+
+    <main class="wrap">
+      <section class="hero reveal">
+        <p class="muted" style="--i:0;margin:0">Maths homework · CBSE Classes 6–8 · 10 minutes each</p>
+        <h1 style="--i:1" aria-label="One half plus one third is not two fifths; it is five sixths"><span class="frac"><b>1</b><b>2</b></span> + <span class="frac"><b>1</b><b>3</b></span> = <span class="strike"><span class="frac"><b>2</b><b>5</b></span></span> <span class="fix"><span class="frac"><b>5</b><b>6</b></span>!</span></h1>
+        <p class="lede" style="--i:2">A confident character makes a classic maths mistake. <strong>You catch it.</strong> Predict what happens, experiment on your phone, explain why — then prove it on brand-new problems.</p>
+        <ul class="flow" style="--i:3" aria-label="Every experiment has five steps">
+          <li><i class="bi bi-lightbulb" aria-hidden="true"></i> Predict</li>
+          <li><i class="bi bi-sliders" aria-hidden="true"></i> Experiment</li>
+          <li><i class="bi bi-eye" aria-hidden="true"></i> Observe</li>
+          <li><i class="bi bi-chat-square-text" aria-hidden="true"></i> Explain</li>
+          <li><i class="bi bi-trophy" aria-hidden="true"></i> Transfer</li>
+        </ul>
+      </section>
+
+      <!-- To add an experiment: copy one <li> below and change slug, character, text. See STYLE.md §6. -->
+      <ul class="experiments reveal">
+        <li class="sheet" style="--i:0" data-slug="add-fractions">
+          <a class="card" href="add-fractions/">
+            <span data-character="robot"></span>
+            <div class="body">
+              <h2>Catch the confident mistake</h2>
+              <p class="claim">Turbo: “½ + ⅓ = ⅖”</p>
+              <div class="meta"><span><i class="bi bi-mortarboard" aria-hidden="true"></i> Class 6–7 · Fractions</span><span><i class="bi bi-clock" aria-hidden="true"></i> 8 min</span><span class="done-badge"><i class="bi bi-check2-circle" aria-hidden="true"></i> Done <span data-score></span></span></div>
+              <p style="margin:0">Use fraction strips to prove Turbo the robot wrong — and find out why you can't just add the bottoms.</p>
+            </div>
+          </a>
+        </li>
+        <li class="sheet" style="--i:1" data-slug="percent-changes">
+          <a class="card" href="percent-changes/">
+            <span data-character="shopkeeper"></span>
+            <div class="body">
+              <h2>The discount that lies</h2>
+              <p class="claim">Dinesh: “+20% then −20% = same price”</p>
+              <div class="meta"><span><i class="bi bi-mortarboard" aria-hidden="true"></i> Class 7–8 · Percentages</span><span><i class="bi bi-clock" aria-hidden="true"></i> 10 min</span><span class="done-badge"><i class="bi bi-check2-circle" aria-hidden="true"></i> Done <span data-score></span></span></div>
+              <p style="margin:0">A ₹100 bag goes up 20%, then 20% off. Why do you pay ₹96? Experiment with any price and percentage.</p>
+            </div>
+          </a>
+        </li>
+        <li class="sheet" style="--i:2" data-slug="balance-equations">
+          <a class="card" href="balance-equations/">
+            <span data-character="monkey"></span>
+            <div class="body">
+              <h2>The balance-sheet cheat</h2>
+              <p class="claim">Gappu: “2x + 3 = 11, so 2x = 11”</p>
+              <div class="meta"><span><i class="bi bi-mortarboard" aria-hidden="true"></i> Class 7–8 · Equations</span><span><i class="bi bi-clock" aria-hidden="true"></i> 10 min</span><span class="done-badge"><i class="bi bi-check2-circle" aria-hidden="true"></i> Done <span data-score></span></span></div>
+              <p style="margin:0">Solve equations on a virtual balance with weights and balloons. Then catch Gappu the monkey cheating.</p>
+            </div>
+          </a>
+        </li>
+      </ul>
+
+      <section class="sheet" id="teachers">
+        <span class="step-label">For teachers</span>
+        <h2>How to use these as homework</h2>
+        <details open name="teach">
+          <summary><i class="bi bi-send" aria-hidden="true"></i> Assigning</summary>
+          <ol>
+            <li>Share one experiment link in your class WhatsApp group. No login, app or adult help needed. Works on any phone browser.</li>
+            <li>Students finish in 5–10 minutes and tap <strong>Send to teacher</strong>. You get a short text report.</li>
+            <li>Next class: ask "What did Turbo / Dinesh / Gappu get wrong, and how did you prove it?" Let students who predicted wrongly explain what changed their mind.</li>
+          </ol>
+        </details>
+        <details name="teach">
+          <summary><i class="bi bi-clipboard-data" aria-hidden="true"></i> Reading the report</summary>
+          <ul>
+            <li><strong>My prediction</strong> shows the misconception <em>before</em> the experiment. A "Certain" wrong prediction is the most valuable one to discuss.</li>
+            <li><strong>Transfer (first set)</strong> is the key number: fresh, randomized problems, first try only. 4/5 or 5/5 means the idea has moved to new problems.</li>
+            <li><strong>Later sets</strong> show students who kept practising after feedback — effort worth praising.</li>
+            <li><strong>In my words</strong> is their own explanation. It's the best evidence of understanding and hard to fake.</li>
+          </ul>
+        </details>
+        <details name="teach">
+          <summary><i class="bi bi-robot" aria-hidden="true"></i> What if students use AI or copy?</summary>
+          <p>Transfer numbers change for every student and every attempt, so copied answers don't carry over. Predictions are recorded before the reveal and never graded. The experiments ask students to <em>notice</em> things on an interactive model — an AI can tell them an answer, but it can't do the noticing for them. The own-words explanation is the best place to look for genuine understanding.</p>
+        </details>
+        <details name="teach">
+          <summary><i class="bi bi-shield-check" aria-hidden="true"></i> Privacy</summary>
+          <p>Nothing leaves the student's phone unless they choose to send their report. Progress is stored only in that phone's browser.</p>
+        </details>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Made for CBSE classrooms. <a href="style-guide/">Style guide</a> for building new experiments.</p>
+    </footer>
+
+    <script type="module">
+      import { $$, character, initTheme, storage } from "./assets/lib.js";
+      initTheme();
+      $$("[data-character]").forEach((el) => (el.outerHTML = character(el.dataset.character)));
+      const done = storage.get("lab:done", {});
+      for (const li of $$("[data-slug]")) {
+        if (!done[li.dataset.slug]) continue;
+        li.classList.add("done");
+        li.querySelector("[data-score]").textContent = `· transfer ${done[li.dataset.slug]}`;
+      }
+    </script>
+  </body>
+</html>
