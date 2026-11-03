@@ -1,5 +1,16 @@
 # Prompts
 
+## Deploy, 03 Nov 2026
+
+<!--
+cd ~/code/homework
+claude --model sonnet --effort medium
+-->
+
+Deploy this repo efficiently on GitHub Pages. Test to make sure https://sanand0.github.io/homework/ works.
+
+<!-- claude --resume 2d46a241-2c1d-47e2-b345-687472150ff8 -->
+
 ## Three Maths Assignments, 03 Nov 2026
 
 <!--
